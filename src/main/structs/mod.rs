@@ -2,7 +2,7 @@ pub struct Column {
     pub name: String,
     pub data_type: String,
     pub comment: String,
-    pub default: String,
+    pub default: String
 }
 pub struct Constraint {
     pub name: String,
@@ -22,7 +22,7 @@ pub struct ForeignKey {
 pub struct Table {
     pub name: String,
     pub columns: Vec<Column>,
-    //p ub// primary_key: PrimaryKey,
+    pub primary_key: PrimaryKey,
     pub constraints: Vec<Constraint>,
     pub comment: String,
 }
