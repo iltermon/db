@@ -18,8 +18,9 @@ impl Column {
         sql.push_str(" ");
         sql.push_str(&self.data_type);
         if !self.default.is_empty() {
-            sql.push_str(" DEFAULT ");
+            sql.push_str(" DEFAULT '");
             sql.push_str(&self.default);
+            sql.push_str("'");
         }
         // if self.comment.len() > 0 {
         //     sql.push_str(" COMMENT ");
@@ -38,9 +39,14 @@ impl TableTrait for Table {
             sql.push_str("\t");
             sql.push_str(&column.to_sql());
         }
-        if !self.primary_key.unique_constraint.constraint.columns.is_empty() {
+        if !self
+            .primary_key
+            .unique_constraint
+            .constraint
+            .columns
+            .is_empty()
+        {
             sql.push_str(&self.primary_key.to_sql());
-            
         }
 
         sql.pop();
@@ -96,8 +102,8 @@ fn main() {
     let column_name = Column {
         name: "name".to_string(),
         data_type: "varchar(255)".to_string(),
-        comment: "".to_string(),
-        default: "".to_string(),
+        comment: "this is a column comment".to_string(),
+        default: "default".to_string(),
     };
     columns.push(Column::new_from(&column_id));
     columns.push(column_name);
@@ -114,7 +120,7 @@ fn main() {
         "TEST".to_string(),
         columns,
         Vec::new(),
-        "".to_string(),
+        "this is a table comment".to_string(),
         primary_key,
     );
     print!("{}", table.to_sql());
