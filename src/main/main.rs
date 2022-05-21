@@ -1,5 +1,6 @@
 mod structs;
 mod traits;
+use regex::Regex;
 use structs::*;
 use traits::TableTrait;
 
@@ -89,39 +90,39 @@ impl PrimaryKey {
         return sql;
     }
 }
-
+fn get_table_name_from_sql(sql: &str) -> String {
+    let re = Regex::new(r"CREATE *TABLE").unwrap();
+    let mut table_name;
+    if re.is_match(sql) {
+        let match_start = re.find(sql).unwrap().start();
+        let match_end = re.find(sql).unwrap().end();
+        table_name = sql[match_end..sql.find('(').unwrap()].trim().to_string();
+        return table_name;
+    } else {
+        println!("{}", "not match");
+        return "".to_string();
+    }
+}
+fn is_sql_valid(sql: &str) -> bool {
+    let re = Regex::new(r"CREATE *TABLE").unwrap();
+    if re.is_match(sql) {
+        return true;
+    } else {
+        return false;
+    }
+}
+fn parse_sql(sql: &str) {
+    //for now only support sql server to oracle
+    // table name : from the first word after CREATE TABLE to the first (
+    if is_sql_valid(sql) == true {
+        let table_name = get_table_name_from_sql(sql);
+    } else {
+        println!("{}", "sql is not valid");
+    }
+}
 fn main() {
-    let mut columns: Vec<Column> = Vec::new();
-    let mut pk_columns: Vec<Column> = Vec::new();
-    let column_id = Column {
-        name: "id".to_string(),
-        data_type: "integer".to_string(),
-        comment: "".to_string(),
-        default: "".to_string(),
-    };
-    let column_name = Column {
-        name: "name".to_string(),
-        data_type: "varchar(255)".to_string(),
-        comment: "this is a column comment".to_string(),
-        default: "default".to_string(),
-    };
-    columns.push(Column::new_from(&column_id));
-    columns.push(column_name);
-    pk_columns.push(Column::new_from(&column_id));
-    let primary_key = PrimaryKey {
-        unique_constraint: UniqueConstraint {
-            constraint: Constraint {
-                name: "pk".to_string(),
-                columns: pk_columns,
-            },
-        },
-    };
-    let table = Table::new(
-        "TEST".to_string(),
-        columns,
-        Vec::new(),
-        "this is a table comment".to_string(),
-        primary_key,
-    );
-    print!("{}", table.to_sql());
+    let re = Regex::new(r"CREATE *TABLE").unwrap();
+    println!("{}", re.find("CREATE TABLE").unwrap().start().to_string());
+    println!("{}", re.is_match("CREATE TABLE"));
+    println!("{}", "CREATE TABLE       xxxxxxxxxx (".find('(').unwrap());
 }
