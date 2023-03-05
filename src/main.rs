@@ -1,5 +1,6 @@
-mod db_connector;
+mod database;
 fn main() {
-    db_connector::connect();
-
+    database_obj = database::Database();
+    // let db_connection = database::get_db_connection();
+    // db_connection
 }
