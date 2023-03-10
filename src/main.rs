@@ -1,7 +1,8 @@
 use database::DatabaseTrait;
-
 mod database;
+mod util;
 fn main() {
-    let mut database_obj = database::connect();
-    database_obj.run_select();
+    let database_url=util::get_parameter("database_url");
+    let mut database_obj = database::connect(&database_url);
+     database_obj.run_select();
 }

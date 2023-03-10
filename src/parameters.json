@@ -1,0 +1,3 @@
+{
+    "database_url": "mysql://root:password@localhost:3306/sys"
+}
