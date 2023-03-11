@@ -19,11 +19,13 @@ pub fn connect(url: &str) -> DatabaseStruct {
 }
 
 pub trait DatabaseTrait {
-    fn run_select(&mut self);
+    fn select_from(&mut self, table_name: &str, column_list: &str);
 }
 impl DatabaseTrait for DatabaseStruct {
-    fn run_select(&mut self) {
-        let test_variable: Vec<String> = self.connection.query("select 'test'").unwrap();
+    fn select_from(&mut self, table_name: &str, column_list: &str) {
+        let query_base = "select ";
+        let query = format!("{} {} from {}", query_base, column_list, table_name);
+        let test_variable: Vec<String> = self.connection.query(query).unwrap();
         print!("{}", &test_variable[0].to_string());
     }
 }
